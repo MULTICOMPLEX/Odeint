@@ -19,6 +19,8 @@
 
 #include "NumCpp.hpp"
 
+#include <numbers>
+
 void Leapfrog_integration();
 void ODE_test_nl(bool e_plot);
 void ODE_Lorenz_System();
@@ -68,6 +70,8 @@ void Haidingers_brush();
 void ODE_Bessels_equation();
 void ODE_Bessels_equationQ();
 
+void inverse_error_function();
+
 int main(int argc, char* argv[]) {
 
 	//trapezoidal();
@@ -75,13 +79,15 @@ int main(int argc, char* argv[]) {
 	//ODE_test_nl(1);
 	//ODE_harmonic_oscillator();
 
+	inverse_error_function();
+
 	//ODE_quantum_harmonic_oscillator();
 
 	//ODE_quantum_harmonic_oscillator_complex();
 
 	//testk1();
 	//for (int x = 0; x <= 8; x++)
-	ODE_Quantum_Solver(2);
+	//ODE_Quantum_Solver(1);
 
 	//ODE_Bessels_equation();
 	//ODE_Bessels_equationQ();
@@ -103,6 +109,92 @@ int main(int argc, char* argv[]) {
 
 	return 0;
 }
+
+double roundn(double var, int N)
+{
+	std::string s = "%.";
+	s += std::to_string(N);
+	s += "f";
+	const auto j = s.c_str();
+	char str[40];
+	sprintf(str, j, var);
+	int count = sscanf(str, "%lf", &var);
+	return var;
+}
+
+void inverse_error_function()
+{
+	double x = 0;
+	double tmax = 0.9996;
+	double h = .0001;
+
+	std::vector<double> y(1);
+
+	double c = sqrt(std::numbers::pi) / 2;
+
+	y[0] = 0;
+
+	std::vector<double> dydx(y.size());
+
+	auto func = [&](const auto& x, const auto& y) {
+
+		dydx[0] = c * exp(pow(y[0], 2));
+
+		return dydx; };
+
+	std::vector<double> Y0 = { y[0] }, X = { x }, X2;
+
+	double z = 0.999;
+	double xc = 0;
+	while (x <= tmax)
+	{
+		if (roundn(x, 6) == z)xc = y[0];
+		//std::cout << std::fixed << std::setprecision(17) << x << " " << y[0].real << std::endl;
+		Embedded_Fehlberg_7_8(func, x, y, h);
+		x += h;
+		X.push_back(x);
+		Y0.push_back(y[0]);
+	}
+	
+	double j = -1;
+	for (auto x = 0; x < X.size() * 2; x++) {
+		X2.push_back(j += h);
+	}
+
+	std::vector<double> Y1 = Y0, Y2;
+
+	std::ranges::reverse(Y1);
+
+	for (auto& y : Y0)
+		y = -y;
+
+	std::ranges::copy(Y0, std::back_inserter(Y1));
+
+	for (auto& y : Y1)
+		y = -y;
+
+	plot.plot_somedata(X2, Y1, "k", "inverse error function", "blue", 2);
+
+	/*
+	for (auto& i : X2)	
+		Y2.push_back(boost::math::erf_inv(i));
+
+	plot.plot_somedata(X2, Y2, "k", "inverse error function", "red", 3);
+	*/
+
+	//std::u32string title = U"ÿ = -y";
+	//plot.set_title(title);
+
+	plot.show();
+
+	std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	std::cout.precision(15);
+	auto p = std::minmax_element(begin(Y0), end(Y0));
+	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << std::endl;
+	std::cout << xc << std::endl;
+	std::cout << boost::math::erf_inv(z) << std::endl;
+}
+
 
 void Haidingers_brush()
 {
@@ -483,7 +575,7 @@ void ODE_Quantum_Solver(int mode)
 	std::vector<std::vector<double>> psi_sola, psi_solb, psi_sols;
 	std::vector<double> E_zeroes, en;
 
-	if (Vo == 0) 
+	if (Vo == 0)
 		en = linspace(0.0, 0.25, 4, false);
 
 	else en = linspace(E, Vo, int(2 * (Vo - E)));
@@ -506,13 +598,13 @@ void ODE_Quantum_Solver(int mode)
 	if (wave_packet)
 	{
 		auto gwp = gaussian_wave_packet(X, (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(sigma), mu);//σ μ
-	//gwp -= gaussian_wave_packet(X, 1 / (1 + sqrt(2)) * sqrt(sigma + 1 + 2 * 0.0072973525693), mu);
+		//gwp -= gaussian_wave_packet(X, 1 / (1 + sqrt(2)) * sqrt(sigma + 1 + 2 * 0.0072973525693), mu);
 		std::u32string text = U"Gaussian wave packet( (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(32), 1 )\\n\
 Normal distribution(σ = 2.377343271833, μ = 1)\\n\
 0.0072973525693 = Fine-structure constant\\n\
 2.377343271833 ≈ 4 sqrt(C_HSM), C_HSM = Hafner-Sarnak-McCurley Constant";//4 sqrt(C_HSM)≈2.3773476711
-	//http://www.totemconsulting.ca/FineStructure.html
-	//https://mathworld.wolfram.com/Hafner-Sarnak-McCurleyConstant.html
+		//http://www.totemconsulting.ca/FineStructure.html
+		//https://mathworld.wolfram.com/Hafner-Sarnak-McCurleyConstant.html
 
 		std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> cv1;
 		text = U"Normal distribution (σ = (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(32), μ = 1 )";
@@ -797,9 +889,9 @@ void ODE_Bessels_equation()
 	Y1.push_back(std::cyl_bessel_j(nu, x));
 	while (x <= tmax)
 	{
-		
+
 		Embedded_Fehlberg_7_8(func, x, y, h);
-		
+
 		x += h;
 		X.push_back(x);
 		Y0.push_back(y[0]);
@@ -1298,9 +1390,9 @@ std::vector<T> linspace(const T start_in, const T end_in, std::size_t num_in, bo
 		{
 			linspaced[i] = (start + delta * i);
 		}
-		
+
 		linspaced[num_in - 1] = end; // I want to ensure that start and end														 
-																 // are exactly the same as the input
+		// are exactly the same as the input
 	}
 
 	else {
