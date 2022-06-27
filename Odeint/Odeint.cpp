@@ -182,15 +182,16 @@ void inverse_error_function()
 	plot.plot_somedata(X2, Y2, "k", "inverse error function", "red", 3);
 	*/
 
-	//std::u32string title = U"ÿ = -y";
-	//plot.set_title(title);
+	std::u32string title = U"y' = sqrt(pi)/2 exp(y^2)";
+	plot.set_title(title);
+	plot.grid_on();
 
 	plot.show();
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << std::endl;
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << std::endl;
 	std::cout << xc << std::endl;
 	std::cout << boost::math::erf_inv(z) << std::endl;
 }
@@ -578,7 +579,7 @@ void ODE_Quantum_Solver(int mode)
 	if (Vo == 0)
 		en = linspace(0.0, 0.25, 4, false);
 
-	else en = linspace(E, Vo, int(2 * (Vo - E)));
+	else en = linspace(E, Vo, int(2 * (static_cast<size_t>(Vo) - E)));
 
 	E_zeroes = Find_all_zeroes(Wave_function, en);
 	if (E_zeroes.empty()) { std::cout << "No roots found !\n\n"; return; }
@@ -718,10 +719,10 @@ Normal distribution(σ = 2.377343271833, μ = 1)\\n\
 
 		std::cout.setf(std::ios::fixed, std::ios::floatfield);
 		std::cout.precision(15);
-		auto p = std::minmax_element(begin(Y[0]), end(Y[0]));
-		std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-		p = std::minmax_element(begin(Y[1]), end(Y[1]));
-		std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+		auto p = std::ranges::minmax_element(Y[0]);
+		std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+		p = std::ranges::minmax_element(Y[1]);
+		std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 	}
 }
 
@@ -761,8 +762,8 @@ void ODE_test_nl(bool e_plot)
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 }
 
 
@@ -909,10 +910,10 @@ void ODE_Bessels_equation()
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-	p = std::minmax_element(begin(Y1), end(Y1));
-	std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+	p = std::ranges::minmax_element(Y1);
+	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 }
 
 
@@ -968,10 +969,10 @@ void ODE_harmonic_oscillator()
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-	p = std::minmax_element(begin(Y1), end(Y1));
-	std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+	p = std::ranges::minmax_element(Y1);
+	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 }
 
 void ODE_quantum_harmonic_oscillator()
@@ -1046,10 +1047,10 @@ y[1] = 0;
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-	p = std::minmax_element(begin(Y1), end(Y1));
-	std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+	p = std::ranges::minmax_element(Y1);
+	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 
 }
 
@@ -1114,10 +1115,10 @@ void ODE_quantum_harmonic_oscillator_complex()
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-	p = std::minmax_element(begin(Y3), end(Y3));
-	std::cout << "minY3 = " << *p.first << ", maxY3 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+	p = std::ranges::minmax_element(Y3);
+	std::cout << "minY3 = " << *p.min << ", maxY3 = " << *p.max << '\n';
 }
 
 //https://sam-dolan.staff.shef.ac.uk/mas212/notebooks/ODE_Example.html
@@ -1166,10 +1167,10 @@ void ODE_Predator_Prey()
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-	p = std::minmax_element(begin(Y1), end(Y1));
-	std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+	p = std::ranges::minmax_element(Y1);
+	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 }
 
 
@@ -1215,10 +1216,10 @@ void ODE_Van_der_Pol_oscillator()
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-	p = std::minmax_element(begin(Y1), end(Y1));
-	std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+	p = std::ranges::minmax_element(Y1);
+	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 }
 
 //https://www.numbercrunch.de/blog/2014/08/calculating-the-hermite-functions/
@@ -1263,8 +1264,8 @@ void quantum_harmonic_oscillator()
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
 
 }
 
@@ -1904,10 +1905,10 @@ void ODE_test_poly()
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
 	std::cout.precision(15);
-	auto p = std::minmax_element(begin(Y0), end(Y0));
-	std::cout << "minY0 = " << *p.first << ", maxY0 = " << *p.second << '\n';
-	p = std::minmax_element(begin(Y1), end(Y1));
-	std::cout << "minY1 = " << *p.first << ", maxY1 = " << *p.second << '\n';
+	auto p = std::ranges::minmax_element(Y0);
+	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << '\n';
+	p = std::ranges::minmax_element(Y1);
+	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 
 }
 
