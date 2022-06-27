@@ -325,7 +325,7 @@ std::tuple<std::vector<std::vector<T>>, std::vector<T>> ODE_Q_sine_cosine_Rectan
 (
 	const T& Vo_b,
 	const T& Vo_e,
-	const T& tmin,
+	const T& tmin, 
 	const T& tmax,
 	const T& h,
 	const T& B1,
