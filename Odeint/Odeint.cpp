@@ -145,7 +145,7 @@ void inverse_error_function()
 	std::vector<double> Y0 = { y[0] }, X = { x }, X2;
 
 	double z = 0.999;
-	double xc = 0;
+	double xc = 0.5;
 	while (x <= tmax)
 	{
 		if (roundn(x, 6) == z)xc = y[0];
@@ -175,13 +175,6 @@ void inverse_error_function()
 
 	plot.plot_somedata(X2, Y1, "k", "inverse error function", "blue", 2);
 
-	/*
-	for (auto& i : X2)	
-		Y2.push_back(boost::math::erf_inv(i));
-
-	plot.plot_somedata(X2, Y2, "k", "inverse error function", "red", 3);
-	*/
-
 	std::u32string title = U"y' = sqrt(pi)/2 exp(y^2)";
 	plot.set_title(title);
 	plot.grid_on();
@@ -195,7 +188,6 @@ void inverse_error_function()
 	std::cout << xc << std::endl;
 	std::cout << boost::math::erf_inv(z) << std::endl;
 }
-
 
 void Haidingers_brush()
 {
