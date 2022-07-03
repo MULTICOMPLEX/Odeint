@@ -138,6 +138,8 @@ void inverse_error_function()
 
 	std::vector<double> dydx(y.size());
 
+	const auto f = [&](const auto& t) {return c * exp(pow(t, 2)); };
+
 	auto func = [&](const auto& x, const auto& y) {
 
 		dydx[0] = c * exp(pow(y[0], 2));
@@ -146,13 +148,15 @@ void inverse_error_function()
 
 	std::vector<double> Y0 = { y[0] }, X = { x }, X2;
 
-	double z = 0.999;
+	double z = 0.99;
 	double xc = 0.5;
 	while (x <= tmax)
 	{
 		if (roundn(x, 6) == z)xc = y[0];
-		//std::cout << std::fixed << std::setprecision(17) << x << " " << y[0].real << std::endl;
+
 		Embedded_Fehlberg_7_8(func, x, y, h);
+		//Midpoint_method_implicit(func, x, y, h);
+		
 		x += h;
 		X.push_back(x);
 		Y0.push_back(y[0]);
@@ -188,7 +192,9 @@ void inverse_error_function()
 	auto p = std::ranges::minmax_element(Y0);
 	std::cout << "minY0 = " << *p.min << ", maxY0 = " << *p.max << std::endl;
 	std::cout << xc << std::endl;
-	std::cout << boost::math::erf_inv(z) << std::endl;
+	
+	mxws<uint32_t> rng;
+	std::cout << rng.erf_inv(z) << std::endl;
 }
 
 void Haidingers_brush()

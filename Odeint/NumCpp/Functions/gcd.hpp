@@ -27,6 +27,8 @@
 ///
 #pragma once
 
+#define NO_USE_BOOST
+
 #if defined(__cpp_lib_gcd_lcm) || !defined(NO_USE_BOOST)
 
 #include "NumCpp/Core/Internal/Error.hpp"
