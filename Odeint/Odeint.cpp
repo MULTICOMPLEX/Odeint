@@ -17,6 +17,8 @@
 #include "Laplace_transform.hpp"
 #include "embedded_prince_dormand_v3_4_5.hpp"
 
+std::string utf8_encode(std::u8string const& s);
+
 #include "NumCpp.hpp"
 
 #include <numbers>
@@ -173,10 +175,10 @@ void inverse_error_function()
 	for (auto& y : Y1)
 		y = -y;
 
-	plot.plot_somedata(X2, Y1, "k", "inverse error function", "blue", 2);
+	plot.plot_somedata(X2, Y1, "", "inverse error function", "blue", 2);
 
-	std::u32string title = U"y' = sqrt(pi)/2 exp(y^2)";
-	plot.set_title(title);
+	std::u8string title = u8"y' = sqrt(pi)/2 exp(y^2)";
+	plot.set_title(utf8_encode(title));
 	plot.grid_on();
 
 	plot.show();
@@ -202,7 +204,7 @@ void Haidingers_brush()
 		(nc::power(mg.first, 2) - nc::power(mg.second, 2));
 	//zz = np.exp(-(xx * *2 + yy * *2)) * (xx * *2 - yy * *2)
 
-	plot.set_title(U"Haidinger's Brush");
+	plot.set_title(utf8_encode(u8"Haidinger's Brush"));
 	plot.imshow(zz.str(), "viridis", E);
 
 	plot.show();
@@ -592,16 +594,16 @@ void ODE_Quantum_Solver(int mode)
 	{
 		auto gwp = gaussian_wave_packet(X, (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(sigma), mu);//σ μ
 		//gwp -= gaussian_wave_packet(X, 1 / (1 + sqrt(2)) * sqrt(sigma + 1 + 2 * 0.0072973525693), mu);
-		std::u32string text = U"Gaussian wave packet( (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(32), 1 )\\n\
+		std::u8string text = u8"Gaussian wave packet( (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(32), 1 )\\n\
 Normal distribution(σ = 2.377343271833, μ = 1)\\n\
 0.0072973525693 = Fine-structure constant\\n\
 2.377343271833 ≈ 4 sqrt(C_HSM), C_HSM = Hafner-Sarnak-McCurley Constant";//4 sqrt(C_HSM)≈2.3773476711
 		//http://www.totemconsulting.ca/FineStructure.html
 		//https://mathworld.wolfram.com/Hafner-Sarnak-McCurleyConstant.html
 
-		std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> cv1;
-		text = U"Normal distribution (σ = (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(32), μ = 1 )";
-		plot.plot_somedata(X, gwp, "k", cv1.to_bytes(text), "Red", 1.0);
+		
+		text = u8"Normal distribution (σ = (1 + 2 * 0.0072973525693) / (1 + sqrt(2)) * sqrt(32), μ = 1 )";
+		plot.plot_somedata(X, gwp, "", utf8_encode(text), "Red", 1.0);
 
 		t = 0;
 		auto v = ODE_Q_sine_cosine(4., 8., tmin, tmax, h);
@@ -618,9 +620,9 @@ Normal distribution(σ = 2.377343271833, μ = 1)\\n\
 		}
 
 		auto rf = psi_sola[0] * *(std::get<0>(v).rbegin());
-		plot.plot_somedata(X, rf, "k", "E = " + oss.str() + " ", "Red", 1.0);
+		plot.plot_somedata(X, rf, "", "E = " + oss.str() + " ", "Red", 1.0);
 		rf = psi_sola[0] * *(std::get<0>(v).rbegin() + 1);
-		plot.plot_somedata(X, rf, "k", "E = " + oss.str() + " ", "Green", 1.0);
+		plot.plot_somedata(X, rf, "", "E = " + oss.str() + " ", "Green", 1.0);
 
 	}
 
@@ -631,7 +633,7 @@ Normal distribution(σ = 2.377343271833, μ = 1)\\n\
 			oss.str(std::string());
 			oss << E;
 			std::cout << "E " << E << std::endl;
-			plot.plot_somedata(X, psi_sola[t], "k", "E = " + oss.str() + " ", colours(t), 1.0);
+			plot.plot_somedata(X, psi_sola[t], "", "E = " + oss.str() + " ", colours(t), 1.0);
 			//plot.plot_somedata(X, psi_solb[t], "k", "E = " + oss.str() + " ", colours(t), 1.0);
 			t++;
 		}
@@ -670,26 +672,26 @@ Normal distribution(σ = 2.377343271833, μ = 1)\\n\
 		{
 			oss.str(std::string());
 			oss << std::get<1>(v)[t];
-			plot.plot_somedata(X, i, "k", "E = " + oss.str() + " ", colours(t), 1.0);
+			plot.plot_somedata(X, i, "", "E = " + oss.str() + " ", colours(t), 1.0);
 			t++;
 		}
 	}
 
-	std::u32string title;
-	if (mode == 0)title = U"Finite potential well";
-	else if (mode == 1)title = U"Infinite potential well = Particle in 1-D Box";
-	else if (mode == 2)title = U"Quantum Harmonic oscillator";
-	else if (mode == 7) title = U"Quantum Harmonic oscillator, van der Pol";
-	else if (mode == 8) title = U"Quantum Harmonic oscillator, van der Pol, Predator-Prey";
+	std::u8string title;
+	if (mode == 0)title = u8"Finite potential well";
+	else if (mode == 1)title = u8"Infinite potential well = Particle in 1-D Box";
+	else if (mode == 2)title = u8"Quantum Harmonic oscillator";
+	else if (mode == 7) title = u8"Quantum Harmonic oscillator, van der Pol";
+	else if (mode == 8) title = u8"Quantum Harmonic oscillator, van der Pol, Predator-Prey";
 	//title = U"Quantum Harmonic oscillator, chained 𓂀 = 𓄍 𓄎";
-	else if (mode == 3)title = U"Gaussian wave packet";
-	else if (mode == 4) title = U"Quantum Gaussian wave packet + tunnelling through a rectangular potential barrier";
-	else if (mode == 5) title = U"Quantum Sine and cosine wave";
+	else if (mode == 3)title = u8"Gaussian wave packet";
+	else if (mode == 4) title = u8"Quantum Gaussian wave packet + tunnelling through a rectangular potential barrier";
+	else if (mode == 5) title = u8"Quantum Sine and cosine wave";
 
-	else title = U"Quantum Cosine wave + tunnelling through a rectangular potential barrier";
+	else title = u8"Quantum Cosine wave + tunnelling through a rectangular potential barrier";
 
 	//plot.set_title(title, "Segoe UI Historic", 20);
-	plot.set_title(title);
+	plot.set_title(utf8_encode(title));
 	plot.grid_on();
 	plot.show();
 
@@ -702,11 +704,11 @@ Normal distribution(σ = 2.377343271833, μ = 1)\\n\
 			Wave_function(E);
 			oss.str(std::string());
 			oss << E;
-			plot.plot_somedata(Y[0], v, "k", "E = " + oss.str() + " ", colours(t++), 1.0);
+			plot.plot_somedata(Y[0], v, "", "E = " + oss.str() + " ", colours(t++), 1.0);
 			v = Y[1];
 		}
 		//plot.set_title(title, "Segoe UI Historic", 20);
-		plot.set_title(title);
+		plot.set_title(utf8_encode(title));
 		plot.show();
 
 		std::cout.setf(std::ios::fixed, std::ios::floatfield);
@@ -745,10 +747,10 @@ void ODE_test_nl(bool e_plot)
 		Y0.push_back(y[0]);
 	}
 
-	plot.plot_somedata(X, Y0, "k", "test", "blue");
+	plot.plot_somedata(X, Y0, "", "test", "blue");
 
-	std::u32string title = U"test";
-	plot.set_title(title);
+	std::u8string title = u8"test";
+	plot.set_title(utf8_encode(title));
 
 	if (e_plot)plot.show();
 
@@ -841,15 +843,15 @@ void ODE_Bessels_equationQ()
 		Wave_function(E);
 		oss.str(std::string());
 		oss << E;
-		plot.plot_somedata(X, Y[0], "k", "E = " + oss.str() + " ", colours(t++), 1.0);
+		plot.plot_somedata(X, Y[0], "", "E = " + oss.str() + " ", colours(t++), 1.0);
 
 		std::cout.setf(std::ios::fixed, std::ios::floatfield);
 		std::cout.precision(15);
 		std::cout << "E = " << oss.str() << std::endl;
 	}
 
-	std::u32string title = U"Quantum Bessel function";
-	plot.set_title(title);
+	std::u8string title = u8"Quantum Bessel function";
+	plot.set_title(utf8_encode(title));
 	plot.grid_on();
 
 	plot.show();
@@ -892,11 +894,11 @@ void ODE_Bessels_equation()
 		//Y1.push_back(y[1]);
 	}
 
-	plot.plot_somedata(X, Y0, "k", "y^1", "blue", 1);
-	plot.plot_somedata(X, Y1, "k", "y^2", "red", 1);
+	plot.plot_somedata(X, Y0, "", "y^1", "blue", 1);
+	plot.plot_somedata(X, Y1, "", "y^2", "red", 1);
 
-	std::u32string title = U"Bessels equation";
-	plot.set_title(title);
+	std::u8string title = u8"Bessels equation";
+	plot.set_title(utf8_encode(title));
 
 	plot.show();
 
@@ -907,8 +909,6 @@ void ODE_Bessels_equation()
 	p = std::ranges::minmax_element(Y1);
 	std::cout << "minY1 = " << *p.min << ", maxY1 = " << *p.max << '\n';
 }
-
-
 
 void ODE_harmonic_oscillator()
 {
@@ -951,11 +951,11 @@ void ODE_harmonic_oscillator()
 		Y1.push_back(y[1]);
 	}
 
-	plot.plot_somedata(X, Y0, "k", "sine", "blue", 1);
-	plot.plot_somedata(X, Y1, "k", "cosine", "red", 1);
+	plot.plot_somedata(X, Y0, "", "sine", "blue", 1);
+	plot.plot_somedata(X, Y1, "", "cosine", "red", 1);
 
-	std::u32string title = U"ÿ = -y";
-	plot.set_title(title);
+	std::u8string title = u8"ÿ = -y";
+	plot.set_title(utf8_encode(title));
 
 	plot.show();
 
@@ -1025,12 +1025,12 @@ y[1] = 0;
 		Y1.push_back(-y[1]);
 	}
 
-	plot.plot_somedata(X, Y0, "k", "Y[0], n = " + std::to_string(n) + "", "red");
+	plot.plot_somedata(X, Y0, "", "Y[0], n = " + std::to_string(n) + "", "red");
 	//plot.plot_somedata(X, Y1, "k", "Y[1]", "blue");
 
-	std::u32string title = U"Hermite functions Ψn̈(x) + (2n + 1 - x²) Ψn(x) = 0";
+	std::u8string title = u8"Hermite functions Ψn̈(x) + (2n + 1 - x²) Ψn(x) = 0";
 
-	plot.set_title(title);
+	plot.set_title(utf8_encode(title));
 	plot.grid_on();
 	plot.show();
 
@@ -1097,12 +1097,12 @@ void ODE_quantum_harmonic_oscillator_complex()
 	//plot.plot_somedata(X, Y2, "k", "y[1].real, n = " + std::to_string(n) + "", "red");
 	plot.plot_somedata(X, Y3, "k", "y[1].imag", "blue");
 
-	std::u32string title = U"Hermite functions Ψn̈(x) + (2n + 1 - x²) Ψn(x) = 0";
-	plot.set_title(title);
+	std::u8string title = u8"Hermite functions Ψn̈(x) + (2n + 1 - x²) Ψn(x) = 0";
+	plot.set_title(utf8_encode(title));
 	plot.grid_on();
 	plot.show();
 
-	plot.plot_somedata(Y0, Y3, "k", "y[0].real vs y[1].imag", "green");
+	plot.plot_somedata(Y0, Y3, "", "y[0].real vs y[1].imag", "green");
 	plot.show();
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
@@ -1147,14 +1147,14 @@ void ODE_Predator_Prey()
 		Y1.push_back(y[1]);
 	}
 
-	plot.plot_somedata(X, Y0, "k", "Y[0]", "blue");
-	plot.plot_somedata(X, Y1, "k", "Y[1]", "red");
+	plot.plot_somedata(X, Y0, "", "Y[0]", "blue");
+	plot.plot_somedata(X, Y1, "", "Y[1]", "red");
 
-	std::u32string title = U"Predator-Prey Equations dx/dt = x(a - by) dy/dt = -y(c - dx)";
+	std::u8string title = u8"Predator-Prey Equations dx/dt = x(a - by) dy/dt = -y(c - dx)";
 
-	plot.set_title(title);
+	plot.set_title(utf8_encode(title));
 	plot.show();
-	plot.plot_somedata(Y0, Y1, "k", "Rabbits vs Foxes", "green");
+	plot.plot_somedata(Y0, Y1, "", "Rabbits vs Foxes", "green");
 	plot.show();
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
@@ -1199,11 +1199,11 @@ void ODE_Van_der_Pol_oscillator()
 		Y1.push_back(y[1]);
 	}
 
-	plot.plot_somedata(X, Y0, "k", "Y[0]", "blue");
-	plot.plot_somedata(X, Y1, "k", "Y[1]", "red");
+	plot.plot_somedata(X, Y0, "", "Y[0]", "blue");
+	plot.plot_somedata(X, Y1, "", "Y[1]", "red");
 
-	std::u32string title = U"x′′+ β(x^2−1)x′ + x = 0";// x = y...
-	plot.set_title(title);
+	std::u8string title = u8"x′′+ β(x^2−1)x′ + x = 0";// x = y...
+	plot.set_title(utf8_encode(title));
 	plot.show();
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
@@ -1246,12 +1246,12 @@ void quantum_harmonic_oscillator()
 		x += h;
 	}
 
-	plot.plot_somedata(X, Y0, "k", "y[0], m = " + std::to_string(n) + " ", "blue");
+	plot.plot_somedata(X, Y0, "", "y[0], m = " + std::to_string(n) + " ", "blue");
 	//plot.plot_somedata(X, Y1, "k", "y[1]", "red");
 
 
-	std::u32string title = U"ÿ - 2xẏ + 2my = 0";
-	plot.set_title(title);
+	std::u8string title = u8"ÿ - 2xẏ + 2my = 0";
+	plot.set_title(utf8_encode(title));
 	plot.show();
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
@@ -1299,7 +1299,7 @@ void ODE_Lorenz_System()
 		Y2.push_back(y[2]);
 	}
 
-	plot.plot_somedata_3D(Y0, Y1, Y2, "k", "Lorenz System", "blue");
+	plot.plot_somedata_3D(Y0, Y1, Y2, "", "Lorenz System", "blue");
 	plot.show();
 }
 
@@ -1638,7 +1638,6 @@ void tal() {
 
 }
 
-
 #pragma warning( disable : 4129 )
 using namespace std;
 
@@ -1688,10 +1687,9 @@ void svg() {
 			X.push_back(j * 100.0L / SIZe);
 		}
 
-		std::u32string title;
-		title = U"Test hermite 2d";
-		std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> cv1;
-		plot.plot_somedata(X, Y, "o", cv1.to_bytes(title), "Red", 1.0, 1);
+		std::u8string title;
+		title = u8"Test hermite 2d";
+		plot.plot_somedata(X, Y, "o", utf8_encode(title), "Red", 1.0, 1);
 		plot.show();
 
 		fout << "</linearGradient>" << endl;
@@ -1875,7 +1873,7 @@ void ODE_test_poly()
 			oss << E;
 			std::cout << "E " << E << std::endl;
 			//Y0 *= pow(t, 100);
-			plot.plot_somedata(X, Y0, "k", "E = " + oss.str() + " ", colours(t), 1.0);
+			plot.plot_somedata(X, Y0, "", "E = " + oss.str() + " ", colours(t), 1.0);
 			//plot.plot_somedata(X, Y1, "k", "E = " + oss.str() + " ", colours(t+1), 1.0);
 			//if (t == 2)break;
 			t++;
@@ -1884,11 +1882,11 @@ void ODE_test_poly()
 	else {
 		Wave_function(1);
 		//plot.plot_somedata(X, Y0, "k", "Y[0], m = " + std::to_string(m) + ", l = " + std::to_string(l) + "", "red", 1);
-		plot.plot_somedata(X, Y1, "k", "Y[1]", "blue", 1);
+		plot.plot_somedata(X, Y1, "", "Y[1]", "blue", 1);
 	}
 	//https://root.cern.ch/doc/v610/LegendreAssoc_8C.html
-	std::u32string title = U"Wave function";
-	plot.set_title(title);
+	std::u8string title = u8"Wave function";
+	plot.set_title(utf8_encode(title));
 	plot.grid_on();
 	plot.show();
 
@@ -1905,3 +1903,7 @@ void ODE_test_poly()
 }
 
 
+std::string utf8_encode(std::u8string const& s)
+{
+	return (const char*)(s.c_str());
+}
